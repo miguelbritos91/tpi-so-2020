@@ -18,13 +18,18 @@
     </div>
     <div class="row mt-3">
       <div class="col-4">
-        <label class="font-weight-bold">Subir Archivo:</label>
-        <div class="form-group">
-          <input type="file" name="" @change="cargarProcesos($event)">
-        </div>
-        <div class="form-group">
-          <button @click="iniciarSimulacion()" class="btn btn-primary btn-block">Iniciar Simulación</button>
-        </div>
+        <form action="">
+          <div class="form-group">
+            <label class="font-weight-bold">Subir Archivo:</label>
+            <input type="file" name="" @change="cargarProcesos($event)">
+          </div>
+          <div class="form-group">
+            <button @click="iniciarSimulacion()" class="btn btn-primary btn-block" :disabled="fileProcesosLoad"
+              v-if="!excec">Iniciar
+              Simulación</button>
+            <button @click="reset()" type="reset" class="btn btn-danger btn-block" v-if="excec">Reset</button>
+          </div>
+        </form>
       </div>
       <div style="margin: 2vw 8vw">
         <table class="table table-responsive">
@@ -50,63 +55,72 @@
     <hr>
     <div class="row mt-3 mb-5" v-if="excec">
 
-      <div class="col-12">
-        <h1>CLOCK: 0</h1>
-        <h1>CPU: PR. 1</h1>
-        <div class="d-flex flex-row align-items-center">
-          <h1>Cola de Arribos | Procesos Nuevos</h1>
 
-          <ul class="list-group list-group-horizontal" style="padding: 2vw">
-            <li class="list-group-item">proc1</li>
-            <li class="list-group-item">proc2</li>
-            <li class="list-group-item">proc3</li>
+      <div class="col-12" v-for="(item, i) in estadistica" :key="i">
+        <h4 class="m-0">CLOCK: {{item.clock}}</h4>
+        <div class="d-flex flex-row align-items-center">
+          <h4 class="m-0">Cola de Arribos | Procesos Nuevos</h4>
+          <ul class="list-group list-group-horizontal pl-2">
+            <li class="list-group-item" v-for="(proc_n, j) in item.proc_nuevos" :key="j">PR{{ proc_n.id }}</li>
           </ul>
         </div>
         <div class="d-flex flex-row align-items-center">
-          <h1>Cola de Listos</h1>
-
-          <ul class="list-group list-group-horizontal" style="padding: 2vw">
-            <li class="list-group-item">proc1</li>
-            <li class="list-group-item">proc2</li>
-            <li class="list-group-item">proc3</li>
+          <h4 class="m-0">Cola de Listos</h4>
+          <ul class="list-group list-group-horizontal pl-2">
+            <li class="list-group-item" v-for="(col_l, k) in item.cola_listos" :key="k">PR{{col_l.id}}</li>
           </ul>
         </div>
-        <table class="table table-hover">
-          <thead class="thead-dark">
-            <tr>
-              <th scope="col">MEM</th>
-              <th scope="col">TAM</th>
-              <th scope="col">INI</th>
-              <th scope="col">ID_PROC</th>
-              <th scope="col">Fragmentación</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>60K</td>
-              <td>160</td>
-              <td>1</td>
-              <td>0</td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>120K</td>
-              <td>160</td>
-              <td>2</td>
-              <td>0</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>250K</td>
-              <td>280</td>
-              <td>3</td>
-              <td>0</td>
-            </tr>
-          </tbody>
-        </table>
+        <!-- <span>{{ item.memoria }}</span> -->
+        <div class="row">
+          <div class="col-6">
+            <h4>Tabla de Memoria</h4>
+            <table class="table table-hover">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">MEM</th>
+                  <th scope="col">TAM</th>
+                  <th scope="col">INI</th>
+                  <th scope="col">ID_PROC</th>
+                  <th scope="col">Fragmentación</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(mem, m) in item.memoria" :key="m">
+                  <th scope="row">{{ m }}</th>
+                  <td>{{ mem.size}}K</td>
+                  <td>{{ mem.inicio }}</td>
+                  <td v-if="mem.idproceso!=null">{{ mem.idproceso }}</td>
+                  <td v-if="mem.idproceso===null">-</td>
+                  <td>{{ mem.fragmentacion }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-6">
+            <h4>CPU</h4>
+            <table class="table table-hover">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">PR</th>
+                  <th scope="col">TA</th>
+                  <th scope="col">MEM</th>
+                  <th scope="col">TI(Restante)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="col">{{ item.cpu.id }}</th>
+                  <th scope="col">{{ item.cpu.ta }}</th>
+                  <th scope="col">{{ item.cpu.size }}</th>
+                  <th scope="col">{{ item.cpu.ti }}</th>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
 
       </div>
+
 
     </div>
   </div>

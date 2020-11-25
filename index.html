@@ -58,20 +58,20 @@
 
       <div class="col-12" v-for="(item, i) in estadistica" :key="i">
         <h4 class="m-0">CLOCK: {{item.clock}}</h4>
-        <div class="d-flex flex-row align-items-center">
-          <h4 class="m-0">Cola de Arribos | Procesos Nuevos</h4>
+        <div class="d-flex flex-row align-items-center mt-3">
+          <h4 class="m-0">Procesos Nuevos</h4>
           <ul class="list-group list-group-horizontal pl-2">
             <li class="list-group-item" v-for="(proc_n, j) in item.proc_nuevos" :key="j">PR{{ proc_n.id }}</li>
           </ul>
         </div>
-        <div class="d-flex flex-row align-items-center">
+        <div class="d-flex flex-row align-items-center mt-3">
           <h4 class="m-0">Cola de Listos</h4>
           <ul class="list-group list-group-horizontal pl-2">
             <li class="list-group-item" v-for="(col_l, k) in item.cola_listos" :key="k">PR{{col_l.id}}</li>
           </ul>
         </div>
         <!-- <span>{{ item.memoria }}</span> -->
-        <div class="row">
+        <div class="row mt-4">
           <div class="col-6">
             <h4>Tabla de Memoria</h4>
             <table class="table table-hover">
@@ -119,6 +119,7 @@
           </div>
         </div>
 
+        <hr>
       </div>
 
 
